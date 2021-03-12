@@ -5,6 +5,7 @@ import FaBo9Axis_MPU9250 as MPU
 from datetime import datetime
 import math
 import smbus
+import os
 
 #setup filepath (using time of recording)
 now = datetime.now()
@@ -84,13 +85,13 @@ def read(norm):
     return (ang_to_norm, curve_to_norm)
 
 def and_detect(reading):
-    if(reading[0] > 10 and reading[1] > 10):
+    if(abs(reading[0]) > 10 and abs(reading[1]) > -15):
         return True
     else:
         return False
 
 def or_detect(reading):
-    if(reading[0] > 10 or reading[1] > 10):
+    if(abs(reading[0]) > 10 or abs(reading[1]) > 10):
         return True
     else:
         return False
@@ -135,12 +136,14 @@ while(True):
         print "slouching detected based on and metric"
         print("----------------------------------")
 	#Bluetooth activty here
+	os.system("python3 anglebuzz.py")
     if(or_counter >= 4):
         or_counter = 0
 	print("----------------------------------")
         print "slouching detected based on or metric"
 	print("----------------------------------")
         #Bluetooth activity here
+	os.system("python3 anglebuzz.py")
     if(input == "quit"):
         break
     reading = read(norm)
