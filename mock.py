@@ -5,7 +5,6 @@ import json
 
 
 INPUT_REGEX = "^([-+]?[0-9]*\.[0-9]+|[0-9]+),([-+]?[0-9]*\.[0-9]+|[0-9]+),([-+]?[0-9]*\.[0-9]+|[0-9]+),([-+]?[0-9]*\.[0-9]+|[0-9]+)$"
-FIREBASE_BASE_URL = "https://vitruvian-38478-default-rtdb.europe-west1.firebasedatabase.app/"
 # BASE_URL = "https://vitruvian.jakeryan.co.uk/api/"
 BASE_URL = "http://localhost:3000/api/"
 
@@ -25,10 +24,11 @@ def fetchRemoteServerReading(path):
 
 
 def postToRemoteDatabase(key, buffer_file):
-    data = json.dumps(buffer_file)
+    data = buffer_file
+    url = BASE_URL + "pi/" + key
     try:
-        url = FIREBASE_BASE_URL + "tests/" + key + ".json"
-        r = requests.put(url, data=data)
+        r = requests.post(url, data=data)
+        print('Received ' + str(r.status_code) + ' status code from remote database for POST')
         return r.text == data
 
     except requests.exceptions.RequestException as e:
