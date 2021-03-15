@@ -29,8 +29,9 @@ def postToRemoteDatabase(key, buffer_file):
     try:
         r = requests.post(url, data=data)
         print('Received ' + str(r.status_code) + ' status code from remote database for POST')
+        print(r.text)
         return r.text == data
 
     except requests.exceptions.RequestException as e:
-        print("Error posting to remote database: " + e)
+        print("Error posting to remote database: " + str(e))
         return False
