@@ -24,7 +24,7 @@ def record():
 
     # Define the codec and create VideoWriter object
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    out = cv2.VideoWriter('mflex.avi',fourcc, 20.0, (640,480))
+    out = cv2.VideoWriter('flex.avi',fourcc, 20.0, (640,480))
 
 
     if (cap.isOpened() == False):
@@ -55,8 +55,8 @@ Grove = GroveFlex
 def main():
 
     #multiprocessing management
-    webcam = Process(target = record)
-    webcam.start()
+    #webcam = Process(target = record)
+    #webcam.start()
 
     #error handling
     #if len(sys.argv) < 2:
@@ -66,12 +66,18 @@ def main():
     #data reading
     sensor1 = GroveFlex(0)
     sensor2 = GroveFlex(2)
-    while True:
-        print('Flex sensor 1 VD value: {}mV'.format(sensor1.value))
-        print('Flex sensor 2 VD value: {}mV'.format(sensor2.value))
-        time.sleep(.2)
+    timer = 0
+    with open("test_flex.txt", "w") as f:
+        while True:
+	    if (timer % 1 == 0):
+                print('time: {} Flex sensor 1 VD value: {}mV'.format(str(timer), str(sensor1.value)))
+                print('time: {} Flex sensor 2 VD value: {}mV'.format(str(timer), str(sensor2.value)))
+            f.write('time: {} FS 1 VD: {}mV\n'.format(str(timer), str(sensor1.value)))
+	    f.write('time: {} FS 2 VD: {}mV\n'.format(str(timer), str(sensor2.value)))
+	    timer += 0.25
+	    time.sleep(.25)
 
-    webcam.terminate()
+    #webcam.terminate()
 
 
 
