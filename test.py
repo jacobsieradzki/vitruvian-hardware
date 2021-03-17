@@ -1,6 +1,6 @@
 from mock import fetchTestMpuReading, postToRemoteDatabase, BASE_URL
 
-CURRENT_TEST_KEY = "jake-test"
+CURRENT_TEST_KEY = "demo-3-test"
 MPU1_RESOURCE_PATH = "pi/test1_mpu1"
 MPU2_RESOURCE_PATH = "pi/test1_mpu2"
 
@@ -24,6 +24,9 @@ def performSlouchDetection(result, t, r, n):
 
 
 print('Reading mock MPU1 and MPU2 ...\n')
+print('... from ' + BASE_URL + MPU1_RESOURCE_PATH)
+print('... from ' + BASE_URL + MPU2_RESOURCE_PATH)
+print('')
 
 app_readings = []
 timestamp = 0 # ms
@@ -42,8 +45,10 @@ while timestamp < 10000:
     timestamp += 500 # ms
 
 
-# Upload to Firebase
+# Upload to remote server
 output = ';'.join(list(map(lambda x: ' '.join(list(map(lambda y: str(y), x))), app_readings)))
 print("Uploading to remote server id=" + CURRENT_TEST_KEY + "...")
 postToRemoteDatabase(CURRENT_TEST_KEY, output)
 print("Uploaded to remote server, available at " + BASE_URL + "app/" + CURRENT_TEST_KEY)
+
+print("")
