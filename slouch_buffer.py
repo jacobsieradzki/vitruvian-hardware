@@ -12,3 +12,4 @@ def sliced_time():
 
 cur_time = sliced_time()
 time_slouching = 0
+
