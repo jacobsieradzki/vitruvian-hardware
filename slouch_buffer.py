@@ -10,6 +10,6 @@ def sliced_time():
     cur_time -= time_into_slice
     return cur_time
 
-cur_time = sliced_time()
+cur_slice = sliced_time()
 time_slouching = 0
 
