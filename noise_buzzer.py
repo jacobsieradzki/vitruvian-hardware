@@ -33,17 +33,21 @@ import time
 from mraa import getGpioLookup
 from upm import pyupm_buzzer as upmBuzzer
 from grove.button import Button
-import grove.grove_ryb_led_button.GroveLedButton
+import led_button 
 
 #keep just to remember how to get different sounds
 #chords = [upmBuzzer.BUZZER_DO, upmBuzzer.BUZZER_RE, upmBuzzer.BUZZER_MI,
 #          upmBuzzer.BUZZER_FA, upmBuzzer.BUZZER_SOL, upmBuzzer.BUZZER_LA,
 #          upmBuzzer.BUZZER_SI];
 
-
+print(Button.EV_LONG_PRESS)
+print(Button.EV_DOUBLE_CLICK)
+print(Button.EV_SINGLE_CLICK)
+print(Button.EV_LEVEL_CHANGED)
 # slot/gpio number your device plugin
 butt_pin = 5
-press = GroveLedButton(butt_pin)
+press = led_button.GroveLedButton(butt_pin)
+print("button = pin 5")
 # the default behavior of led is
 #   single click - on
 #   double click - blink
@@ -53,33 +57,39 @@ press = GroveLedButton(butt_pin)
 #   PWM JST SLOT - PWM[12 13 VCC GND]
 buzz_pin = 12
 #
+print("buzzer = pin 12")
 # Create the buzzer object using RaspberryPi GPIO12
 mraa_pin = getGpioLookup("GPIO%02d" % buzz_pin)
+print("pin acquired: {}".format(mraa_pin))
 buzzer = upmBuzzer.Buzzer(mraa_pin)
+print("buzzer assigned")
 
 # Print sensor name
-print(buzzer.name())
+print("buzzer is: {}".format(buzzer.name()))
+
+#set led off
+press.led.light(False)
 
 # define a customized event handle for button (press.led controls led)
 def cust_on_event(index, event, tm):
     print("event with code {}, time {}".format(event, tm))
-    self.led.light(False)
-    self.led.brightness = self.led.MAX_BRIGHT
+    press.led.brightness = press.led.MAX_BRIGHT
     if event & Button.EV_SINGLE_CLICK:
-        self.led.light(True)
+        press.led.light(True)
         print("turn on  LED")
-        print(buzzer.playSound(upm.Buzzer_DO, 500000))
+        print(buzzer.playSound(upmBuzzer.Buzzer_DO, 500000))
     elif event & Button.EV_DOUBLE_CLICK:
-        self.led.blink()
-        print(buzzer.playSound(upm.Buzzer_DO, 250000))
+        press.led.blink()
+        print(buzzer.playSound(upmBuzzer.Buzzer_DO, 250000))
         print("blink    LED")
     elif event & Button.EV_LONG_PRESS:
-        self.led.light(False)
-        print(buzzer.playSound(upm.Buzzer_SI, 500000))
+        press.led.light(False)
+        print(buzzer.playSound(upmBuzzer.Buzzer_SI, 500000))
         print("turn off LED")
 
 
 press.on_event = cust_on_event
+print("custom event handler")
 
 def main():
     from grove import helper
@@ -88,6 +98,7 @@ def main():
 
     while True:
         time.sleep(1)
+	#print("time cycle")
 
 
     print("exiting application")
