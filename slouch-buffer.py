@@ -1,7 +1,7 @@
 import time
 
 #Set slice length variable, and initialise current time slice
-slice_length = 60 #This is in seconds
+SLICE_LENGTH = 60 #This is in seconds
 
 #Gives the current time slice in terms of the seconds_since_epoch when it began
 def sliced_time():
