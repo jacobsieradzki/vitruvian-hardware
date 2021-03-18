@@ -24,9 +24,6 @@ device_select = 0
 #initialise camera and mpu at first mux position
 camera = PiCamera()
 
-#Set slice length variable, and initialise current time slice
-slice_length = 60 #This is in seconds
-
 def accel_to_angle(y, z):
     angle = math.degrees(math.atan(y/z))
     if(angle > 0):
@@ -98,16 +95,6 @@ def or_detect(reading):
         return True
     else:
         return False
-
-#Gives the current time slice in terms of the seconds_since_epoch when it began
-def sliced_time():
-    cur_time = int(time.time())
-    time_into_slice = cur_time % slice_length
-    cur_time -= time_into_slice
-    return cur_time
-
-cur_time = sliced_time()
-time_slouching = 0
 
 norm = (0, 0)
 
