@@ -119,7 +119,7 @@ class GroveLedButton(object):
 def main():
     from grove.helper import SlotHelper
     sh = SlotHelper(SlotHelper.GPIO)
-    pin = sh.argv2pin()
+    pin = 5
 
     ledbtn = GroveLedButton(pin)
 
