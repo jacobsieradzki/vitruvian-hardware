@@ -7,20 +7,12 @@ import math
 import smbus
 import os
 import slouch_buffer
+import accel_read
 
 #setup filepath (using time of recording)
 now = datetime.now()
 current_time = now.strftime("%H_%M_%S")
 filepath = "Documents/TestingOutput/"
-
-#selects the first device on the mux by default
-bus = smbus.SMBus(1)
-dev = [0b00000001, 0b00000010]
-addr = 0x70
-bus.write_byte(addr,dev[0])
-mpu = MPU.MPU9250()
-#idnetifier for device currently selected
-device_select = 0
 
 #initialise camera and mpu at first mux position
 camera = PiCamera()
@@ -39,20 +31,10 @@ def calibrate(cal_length) :
     cal_angles = []
     cal_curves = []
     while i < cal_length:
-        theta = []
         print i
-        #loop for both devices, add the appropriate values to the recorded values
-        for j in dev:
-            bus.write_byte(addr,j)
-            accel = mpu.readAccel()
-            y = accel['y'] + 0.00000001
-            z = accel['z'] + 0.00000001
-            theta.append(accel_to_angle(y, z))
-        angle = sum(theta)/len(theta)
-	print str(angle)
-	curve = theta[0] - theta[1]
-	print str(curve)
-        #get the average angle of the sensors
+        (angle, curve) = accel_read.read()
+	    print str(angle)
+	    print str(curve)
         cal_angles.append(angle)
         cal_curves.append(curve)
         time.sleep(0.25)
@@ -65,24 +47,16 @@ def calibrate(cal_length) :
     print "\n"
     return (norm_angle, norm_curve)
 
-#Returns (angle, curve) as a tuple
+#Returns (angle, curve) as a tuplem, adjusted based on difference from norm
 def read(norm):
     norm_angle = norm[0]
     norm_curve = norm[1]
-    angle = 0
-    curve = 0
-    theta = []
-    #loop through IMUs and calculate angle of each
-    for j in dev:
-        bus.write_byte(addr, j)
-        accel = mpu.readAccel()
-        y = accel['y'] + 0.00000001
-        z = accel['z'] + 0.00000001
-        theta.append(accel_to_angle(y, z))
-    #calculate average back angle and curve
-    angle = sum(theta)/len(theta)
+    theta = accel_read.read()
+    (angle, curve) = accel_read.read()
+	print str(angle)
+	print str(curve)
     ang_to_norm = angle - norm_angle
-    curve_to_norm = theta[0] - theta[1] - norm_curve
+    curve_to_norm = curve - norm_curve
     return (ang_to_norm, curve_to_norm)
 
 def over_threshold(reading):
