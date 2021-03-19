@@ -85,14 +85,14 @@ def read(norm):
     curve_to_norm = theta[0] - theta[1] - norm_curve
     return (ang_to_norm, curve_to_norm)
 
-def detect(reading):
+def over_threshold(reading):
     if(abs(reading[0]) > 10 and abs(reading[1]) > -15):
         return True
     else:
         return False
 
 #Deprecated method
-#def or_detect(reading):
+#def or_over_threshold(reading):
 #    if(abs(reading[0]) > 10 or abs(reading[1]) > 10):
 #        return True
 #    else:
@@ -142,7 +142,7 @@ def main():
         if(print_counter >= 2):
         print reading 
         print_counter = 0
-        if(and_detect(reading)):
+        if(over_threshold(reading)):
             counter += 0.25
         elif(counter > 0):
             counter -= 0.125
