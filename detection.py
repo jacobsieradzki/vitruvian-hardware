@@ -84,17 +84,18 @@ def read(norm):
     curve_to_norm = theta[0] - theta[1] - norm_curve
     return (ang_to_norm, curve_to_norm)
 
-def and_detect(reading):
+def detect(reading):
     if(abs(reading[0]) > 10 and abs(reading[1]) > -15):
         return True
     else:
         return False
 
-def or_detect(reading):
-    if(abs(reading[0]) > 10 or abs(reading[1]) > 10):
-        return True
-    else:
-        return False
+#Deprecated method
+#def or_detect(reading):
+#    if(abs(reading[0]) > 10 or abs(reading[1]) > 10):
+#        return True
+#    else:
+#        return False
 
 norm = (0, 0)
 
@@ -125,24 +126,16 @@ while(True):
 
 print "past loop"
 #Enter slouch detection loop
-and_counter = 0
-or_counter = 0
+counter = 0
 print_counter = 0
 while(True):
     print_counter += 0.25
-    if(and_counter >= 4):
+    if(counter >= 4):
         and_counter = 0
-	print("----------------------------------")
-        print "slouching detected based on and metric"
+	    print("----------------------------------")
+        print "slouching detected
         print("----------------------------------")
 	#Bluetooth activty here
-	os.system("python3 anglebuzz.py")
-    if(or_counter >= 4):
-        or_counter = 0
-	print("----------------------------------")
-        print "slouching detected based on or metric"
-	print("----------------------------------")
-        #Bluetooth activity here
 	os.system("python3 anglebuzz.py")
     if(input == "quit"):
         break
@@ -151,13 +144,9 @@ while(True):
 	print reading 
 	print_counter = 0
     if(and_detect(reading)):
-        and_counter += 0.25
-    elif(and_counter > 0):
-        and_counter -= 0.125
-    if(or_detect(reading)):
-        or_counter += 0.25
-    elif(or_counter > 0):
-        or_counter -= 0.125
+        counter += 0.25
+    elif(counter > 0):
+        counter -= 0.125
     time.sleep(0.25)
 
 if(cam):
