@@ -17,13 +17,11 @@ def update_buffer():
     global cur_slice
     new_slice = sliced_time()
     if(new_slice != cur_slice):
-        print "in dump bit"
         cur_slice = new_slice
         score = time_slouching / float(SLICE_LENGTH) * 100
         with open("./buffers/buffer", 'a') as buffer:
             buffer.write("0 " + str(sliced_time()) + "000 " + str(int(score)) + ": ")
     else:
-        print "in else bit"
         global time_slouching
         print str(time_slouching)
         time_slouching = time_slouching + 4
