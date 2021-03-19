@@ -5,8 +5,8 @@ import json
 
 
 INPUT_REGEX = "^([-+]?[0-9]*\.[0-9]+|[0-9]+),([-+]?[0-9]*\.[0-9]+|[0-9]+),([-+]?[0-9]*\.[0-9]+|[0-9]+),([-+]?[0-9]*\.[0-9]+|[0-9]+)$"
-# BASE_URL = "https://vitruvian.jakeryan.co.uk/api/"
-BASE_URL = "http://localhost:3000/api/"
+BASE_URL = "https://vitruvian.jakeryan.co.uk/api/"
+# BASE_URL = "http://localhost:3000/api/"
 
 # ----------------------------
 # Fetch single reading
