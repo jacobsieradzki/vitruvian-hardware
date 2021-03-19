@@ -17,6 +17,14 @@ filepath = "Documents/TestingOutput/"
 #initialise camera and mpu at first mux position
 camera = PiCamera()
 
+#Reader is, by default, the accelerometers as on our pi setup
+reader = accel_read.read()
+
+#Take a new method that will be called to get readings (I know this isn't best practice, just run with it)
+def set_reader(method):
+    global reader
+    reader = method
+
 def accel_to_angle(y, z):
     angle = math.degrees(math.atan(y/z))
     if(angle > 0):
@@ -32,7 +40,7 @@ def calibrate(cal_length) :
     cal_curves = []
     while i < cal_length:
         print i
-        (angle, curve) = accel_read.read()
+        (angle, curve) = reader()
 	    print str(angle)
 	    print str(curve)
         cal_angles.append(angle)
@@ -51,8 +59,7 @@ def calibrate(cal_length) :
 def read(norm):
     norm_angle = norm[0]
     norm_curve = norm[1]
-    theta = accel_read.read()
-    (angle, curve) = accel_read.read()
+    (angle, curve) = reader()
 	print str(angle)
 	print str(curve)
     ang_to_norm = angle - norm_angle
