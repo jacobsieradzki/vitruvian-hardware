@@ -6,6 +6,7 @@ from datetime import datetime
 import math
 import smbus
 import os
+import slouch_buffer
 
 #setup filepath (using time of recording)
 now = datetime.now()
@@ -142,7 +143,7 @@ while(True):
 	print("----------------------------------")
         print "slouching detected based on or metric"
 	print("----------------------------------")
-        #Bluetooth activity here
+        slouch_buffer.update_buffer()
 	os.system("python3 anglebuzz.py")
     if(input == "quit"):
         break
