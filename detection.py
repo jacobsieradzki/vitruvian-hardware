@@ -85,83 +85,73 @@ def read(norm):
     curve_to_norm = theta[0] - theta[1] - norm_curve
     return (ang_to_norm, curve_to_norm)
 
-def and_detect(reading):
+def detect(reading):
     if(abs(reading[0]) > 10 and abs(reading[1]) > -15):
         return True
     else:
         return False
 
-def or_detect(reading):
-    if(abs(reading[0]) > 10 or abs(reading[1]) > 10):
-        return True
-    else:
-        return False
+#Deprecated method
+#def or_detect(reading):
+#    if(abs(reading[0]) > 10 or abs(reading[1]) > 10):
+#        return True
+#    else:
+#        return False
 
-norm = (0, 0)
+def main():
+    norm = (0, 0)
+    #Wait for user to start calibration
+    print "Type 'cal' to begin calibration"
+    while(True):
+        if(raw_input() == 'cal'):
+        print "calibrating"
+            norm = calibrate(4)
+            print "calibration finished"
+            #Bluetooth connection goes here
+            break
 
-#Wait for user to start calibration
-print "Type 'cal' to begin calibration"
-while(True):
-    if(raw_input() == 'cal'):
-	print "calibrating"
-        norm = calibrate(4)
-        print "calibration finished"
-        #Bluetooth connection goes here
+    cam = False
+    #Wait for user to specify if camera is desired (for testing purposes)
+    print "Type 'cam' for streaming and recording, and 'nocam' otherwise"
+    while(True):
+        input  = raw_input()
+        if(input == 'cam'):
+            #Turn the thing on
+        cam = True
+        break
+        elif(input == 'nocam'):
+            print "nocam"
+            #Nocam
         break
 
-cam = False
-#Wait for user to specify if camera is desired (for testing purposes)
-print "Type 'cam' for streaming and recording, and 'nocam' otherwise"
-while(True):
-    input  = raw_input()
-    print "In loop"
-    if(input == 'cam'):
-        #Turn the thing on
-	cam = True
-	break
-    elif(input == 'nocam'):
-	print "nocam"
-        #Nocam
-	break
+    #Enter slouch detection loop
+    counter = 0
+    print_counter = 0
+    while(True):
+        print_counter += 0.25
+        if(counter >= 4):
+            and_counter = 0
+            print("----------------------------------")
+            print "slouching detected
+            print("----------------------------------")
+            slouch_buffer.update_buffer()
+        os.system("python3 anglebuzz.py")
+        if(input == "quit"):
+            break
+        reading = read(norm)
+        if(print_counter >= 2):
+        print reading 
+        print_counter = 0
+        if(and_detect(reading)):
+            counter += 0.25
+        elif(counter > 0):
+            counter -= 0.125
+        time.sleep(0.25)
 
-print "past loop"
-#Enter slouch detection loop
-and_counter = 0
-or_counter = 0
-print_counter = 0
-while(True):
-    print_counter += 0.25
-    if(and_counter >= 4):
-        and_counter = 0
-	print("----------------------------------")
-        print "slouching detected based on and metric"
-        print("----------------------------------")
-	#Bluetooth activty here
-	os.system("python3 anglebuzz.py")
-    if(or_counter >= 4):
-        or_counter = 0
-	print("----------------------------------")
-        print "slouching detected based on or metric"
-	print("----------------------------------")
-        slouch_buffer.update_buffer()
-	os.system("python3 anglebuzz.py")
-    if(input == "quit"):
-        break
-    reading = read(norm)
-    if(print_counter >= 2):
-	print reading 
-	print_counter = 0
-    if(and_detect(reading)):
-        and_counter += 0.25
-    elif(and_counter > 0):
-        and_counter -= 0.125
-    if(or_detect(reading)):
-        or_counter += 0.25
-    elif(or_counter > 0):
-        or_counter -= 0.125
-    time.sleep(0.25)
+    if(cam):
+        #Turn off the camera
+        1
 
-if(cam):
-    #Turn off the camera
-    1
-
+if __name__ == "__main__":
+    #Execute only if run as a script
+    main()
