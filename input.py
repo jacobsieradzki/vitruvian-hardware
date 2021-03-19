@@ -1,6 +1,7 @@
 
 class Reading:
     def __init__(self, data):
+        self.timestamp = data['timestamp']
         self.x = data['x'] + 0.00000001
         self.y = data['y'] + 0.00000001
         self.z = data['z'] + 0.00000001
