@@ -64,9 +64,9 @@ class LiteModel:
         self.interpreter.allocate_tensors()
 
         # Get input and output tensors.
-        self.input_details = interpreter.get_input_details()
-        self.output_details = interpreter.get_output_details()
-        self.input_shape = input_details[0]['shape']
+        self.input_details = self.interpreter.get_input_details()
+        self.output_details = self.interpreter.get_output_details()
+        self.input_shape = self.input_details[0]['shape']
 
     def predict(self, input_data): #input data must be a np array in the shape (200, 3)
         input_data = np.array(input_data.reshape(1, 200, 3, 1),dtype=np.float32)
