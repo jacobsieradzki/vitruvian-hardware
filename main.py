@@ -4,12 +4,16 @@ import time
 from input import get_input_sources
 from ActivityType import ActivityType
 
+# python3 main.py MOCK_MPU1 MOCK_MPU2 MOCK_GYRO BLUETOOTH
+# python3 main.py LIVE LIVE LIVE BLUETOOTH
+# python3 main.py pi/accel-lower-jakevid1.csv pi/accel-upper-jakevid1.csv pi/gyro-lower-jakevid1.csv BLUETOOTH
+
+
 INTERVAL_MS = 500
 
-# python3 main.py MOCK_MPU1 MOCK_MPU2 MOCK_GYRO BLUETOOTH
 
 if len(sys.argv) != 5:
-    sys.exit("Incorrect arguments. Use:\npython3 " + sys.argv[0] + " [MPU1_SOURCE] [MPU2_SOURCE] [GYRO_SOURCE] [OUTPUT]")
+    sys.exit("Incorrect arguments. Use:\n" + sys.argv[0] + " [MPU1_SOURCE] [MPU2_SOURCE] [GYRO_SOURCE] [OUTPUT]")
 
 output_location = sys.argv[4]
 buffer_file = ""
@@ -27,8 +31,7 @@ def add_to_buffer(activity_type, value=None):
     else:
         item += str(activity_type) + " " + str(rel_time) + " " + str(value)
     buffer_file += item
-    print("### file")
-    print(buffer_file)
+    print("### file", buffer_file)
 
 
 def received_readings():
@@ -72,6 +75,7 @@ mpu1_source, mpu2_source, gyro_source = get_input_sources(
     sys.argv[1], sys.argv[2], sys.argv[3],
     received_new_mpu1_reading, received_new_mpu2_reading, received_new_gyro_reading
 )
+
 
 while True:
     mpu1_source.fetch_new_reading(rel_time, INTERVAL_MS)
