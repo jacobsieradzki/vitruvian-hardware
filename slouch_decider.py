@@ -1,25 +1,33 @@
+#Python class for setting up slouch deciders. Slouch deciders determine if a user is slouching
+#   based on back measurements
+
 import back_measurement
-import accel_read
 
-def over_threshold(reading):
-    if(abs(reading[0]) > 10 and abs(reading[1]) > -15):
-        return True
-    else:
-        return False
+ANGLE_THRESHOLD = 10
+CURVE_THRESHOLD = 15
 
-norm
-def calibrate(reader):
-    global norm
-    norm = back_measurement.calibrate(4, reader)
+class slouch_decider:
+    def __init__(norm):
+        self.norm = norm
+        self.counter = 0
 
-counter = 0
-def decide(reader):
-    global counter
-    reading = back_measurement.read(norm, reader)
-    if over_threshold(reading):
-        counter += 0.25
-    else:
-        counter -= 1.25
-    if counter >= 4:
-        counter = 0
-        return True
+    #Given the absolute differences between observed and normal values, decides if slouching has occured
+    def slouching(readings) 
+        (angle_diff, curve_diff) = back_measurement.calculate_differences(self.norm, readings)
+        if angle_diff > ANGLE_THRESHOLD and curve_diff > 15:
+            return True
+        else:
+            return False
+
+    #Decides the users progress towards a slouch output, returning true if the user is slouching,
+    #   returning false and updating the counter if not.
+    def decide(readings):
+        if slouching(reading):
+            self.counter += 0.25
+        else:
+            self.counter -= 1.25
+        if self.counter >= 4:
+            self.counter = 0
+            return True
+        else:
+            return False
