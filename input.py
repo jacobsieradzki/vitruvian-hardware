@@ -1,5 +1,6 @@
 # from AccelerometerInputSource import MPUInputSource
 from MockInputSource import MockInputSource
+from LiveInputSource import LiveInputSource
 
 
 def get_input_sources(mpu1_source, mpu2_source, gyro_source,
@@ -16,6 +17,11 @@ def get_input_sources(mpu1_source, mpu2_source, gyro_source,
         input1_source = MockInputSource("pi/test1_mpu1", received_new_mpu1_reading)
         input2_source = MockInputSource("pi/test1_mpu2", received_new_mpu2_reading)
         gyro_source = MockInputSource("pi/test1_mpu2", received_new_gyro_reading)
+        return input1_source, input2_source, gyro_source
+    elif 'LIVE' in mpu1_source and 'LIVE' in mpu2_source and 'LIVE' in gyro_source:
+        input1_source = LiveInputSource("ios/accel-jake1?format=ALL", received_new_mpu1_reading)
+        input2_source = LiveInputSource("ios/accel-jake2?format=ALL", received_new_mpu2_reading)
+        gyro_source = LiveInputSource("ios/gyro-jake1?format=ALL", received_new_gyro_reading)
         return input1_source, input2_source, gyro_source
     else:
         print("# mpu1_source =" + mpu1_source, "  --- mpu2_source =" + mpu2_source, "  --- gyro_source =" + gyro_source)

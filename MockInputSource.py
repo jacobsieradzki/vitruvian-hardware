@@ -1,10 +1,8 @@
 import requests
 import re
 from Reading import Reading
-import json
+from mock import BASE_URL
 
-# BASE_URL = "http://localhost:3000/api/"
-BASE_URL = "https://vitruvian.jakeryan.co.uk/api/"
 INPUT_REGEX = "^([-+]?[0-9]*\.[0-9]+|[0-9]+),([-+]?[0-9]*\.[0-9]+|[0-9]+),([-+]?[0-9]*\.[0-9]+|[0-9]+),([-+]?[0-9]*\.[0-9]+|[0-9]+)$"
 
 
@@ -27,3 +25,4 @@ class MockInputSource:
             print("Error: ", url, r.status_code)
             reading = Reading(timestamp, 0, 0, 0)
             self.received_new_reading(reading)
+

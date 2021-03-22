@@ -3,8 +3,8 @@ from mock import fetchLiveMpuReadings, BASE_URL
 
 FREQ = 100
 CURRENT_TEST_KEY = "demo-3-test"
-MPU1_RESOURCE_PATH = "ios/accel-jake?format=ALL"
-MPU2_RESOURCE_PATH = "ios/gyro-jake?format=ALL"
+MPU1_RESOURCE_PATH = "ios/accel-jake1?format=ALL"
+MPU2_RESOURCE_PATH = "ios/accel-jake2?format=ALL"
 
 
 def receivedSensorReading(o, t):
