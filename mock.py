@@ -4,7 +4,7 @@ from input import Reading
 import json
 
 
-INPUT_REGEX = "^([-+]?[0-9]*\.[0-9]+|[0-9]+),([-+]?[0-9]*\.[0-9]+|[0-9]+),([-+]?[0-9]*\.[0-9]+|[0-9]+),([-+]?[0-9]*\.[0-9]+|[0-9]+)$"
+
 BASE_URL = "https://vitruvian.jakeryan.co.uk/api/"
 # BASE_URL = "http://localhost:3000/api/"
 
@@ -26,9 +26,9 @@ def fetchRemoteServerReading(path):
     matches = re.findall(INPUT_REGEX, r.text)
     if r.status_code == 200 and matches is not None and len(matches) == 1 and len(matches[0]) == 4:
         [(timestamp, x, y, z)] = matches
-        return Reading({'x': float(x), 'y': float(y), 'z': float(z)})
+        return Reading({'x': float(x), 'y': float(y), 'z': float(z)}, fix=False)
     else:
-        return Reading({'x': 0, 'y': 0, 'z': 0})
+        return Reading({'x': 0, 'y': 0, 'z': 0}, fix=False)
 
 
 # ----------------------------
