@@ -37,7 +37,7 @@ def received_readings():
 
     mpu1_reading, mpu2_reading, gyro_reading = mpu1_readings.pop(0), mpu2_readings.pop(0), gyro_readings.pop(0)
     slouch_detection_reading(mpu1_reading, mpu2_reading)
-    sedentary_detection_reading(mpu1_reading, mpu2_reading, gyro_reading)
+    sedentary_detection_reading(mpu2_reading, gyro_reading)
 
 
 def slouch_detection_reading(mpu1_reading, mpu2_reading):
@@ -45,25 +45,25 @@ def slouch_detection_reading(mpu1_reading, mpu2_reading):
     # add_to_buffer(ActivityType.POSTURE, 55)
 
 
-def sedentary_detection_reading(mpu1_reading, mpu2_reading, gyro_reading):
-    print("### sedentary_detection_reading ...", mpu1_reading, mpu2_reading, gyro_reading)
+def sedentary_detection_reading(lower_mpu_reading, gyro_reading):
+    print("### sedentary_detection_reading ...", lower_mpu_reading, gyro_reading)
     # add_to_buffer(ActivityType.WALKING)
 
 
 def received_new_mpu1_reading(reading):
-    print("# received_new_mpu1_reading", reading.timestamp, reading.x, reading.y, reading.z)
+    # print("# received_new_mpu1_reading", reading.timestamp, reading.x, reading.y, reading.z)
     mpu1_readings.append(reading)
     received_readings()
 
 
 def received_new_mpu2_reading(reading):
-    print("# received_new_mpu2_reading", reading.timestamp, reading.x, reading.y, reading.z)
+    # print("# received_new_mpu2_reading", reading.timestamp, reading.x, reading.y, reading.z)
     mpu2_readings.append(reading)
     received_readings()
 
 
 def received_new_gyro_reading(reading):
-    print("# received_new_gyro_reading", reading.timestamp, reading.x, reading.y, reading.z)
+    # print("# received_new_gyro_reading", reading.timestamp, reading.x, reading.y, reading.z)
     gyro_readings.append(reading)
     received_readings()
 

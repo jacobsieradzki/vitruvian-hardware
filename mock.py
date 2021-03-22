@@ -1,6 +1,6 @@
 import requests
 import re
-from input import Reading
+from Reading import Reading
 import json
 
 
@@ -40,7 +40,7 @@ def fetchLiveMpuReadings(path):
     r = requests.get(BASE_URL + path)
     if r.status_code == 200 and len(r.text) > 0:
         data = json.loads(r.text)
-        data = list(map(lambda o: Reading({'timestamp': float(o['timestamp']), 'x': o['x'], 'y': o['y'], 'z': o['z']}), data))
+        data = list(map(lambda o: Reading(o['timestamp'], o['x'], o['y'], o['z']), data))
         data.sort(key=lambda x: x.timestamp, reverse=True)
         return data
     else:
