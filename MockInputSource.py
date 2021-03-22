@@ -22,7 +22,7 @@ class MockInputSource:
             self.received_new_reading(reading)
 
         else:
-            print("Error: ", url, r.status_code)
+            print(r.status_code, "Error:", url)
             reading = Reading(timestamp, 0, 0, 0)
             self.received_new_reading(reading)
 
