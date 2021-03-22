@@ -3,6 +3,8 @@ import sys
 import time
 from input import get_input_sources
 from ActivityType import ActivityType
+from grove.button import Button
+import grove.grove_ryb_led_button.GroveLedButton
 
 INTERVAL_MS = 500
 
@@ -17,6 +19,22 @@ rel_time = 0
 mpu1_readings = []
 mpu2_readings = []
 gyro_readings = []
+led_button = GroveLedButton(5)
+
+def cust_on_event(index, event, tm):
+    #print "event with code {}, time {}".format(event, tm)
+    press.led.brightness = press.led.MAX_BRIGHT
+    if event & Button.EV_SINGLE_CLICK:
+        #press.led.light(True)
+        ### Insert action if single click of button occurs
+    elif event & Button.EV_DOUBLE_CLICK:
+        #press.led.blink()
+        ### Insert action if double click occurs (NB, least reliable based on testing)
+    elif event & Button.EV_LONG_PRESS:
+        #press.led.light(False)
+        ### Insert action if long press occurs (NB, most reliable based on testing)
+
+led_button.on_event = cust_on_event
 
 
 def add_to_buffer(activity_type, value=None):
