@@ -7,7 +7,6 @@ import math
 import smbus
 import os
 import slouch_buffer
-import accel_read
 
 #setup filepath (using time of recording)
 now = datetime.now()
@@ -47,7 +46,7 @@ def calibrate(cal_length, reader) :
     print "\n"
     return (norm_angle, norm_curve)
 
-#Returns (angle, curve) as a tuplem, adjusted based on difference from norm
+#Returns (angle, curve) as a tuple, adjusted based on difference from norm
 def read(norm, reader):
     norm_angle = norm[0]
     norm_curve = norm[1]
