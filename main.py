@@ -41,7 +41,16 @@ def received_readings():
 
 
 def slouch_detection_reading(mpu1_reading, mpu2_reading):
-    print("### slouch_detection ...", mpu1_reading, mpu2_reading)
+    if slouch_decider.decide(mpu1_reading, mpu2_reading):
+        print("### slouch_detection ...", mpu1_reading, mpu2_reading)
+        add_to_buffer(ActivityType.SLOUCH_ALERT)
+        score = slouch_buffer.update_buffer(True)
+        if score:
+            add_to_buffer(ActivityType.POSTURE, value=score
+    else:
+        score = slouch_buffer.update_buffer(False)
+        if score:
+            add_to_buffer(ActivityType.POSTURE, value=score
     # add_to_buffer(ActivityType.POSTURE, 55)
 
 
