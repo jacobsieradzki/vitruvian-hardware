@@ -7,7 +7,7 @@ from back_measurement import calculate_norm
 import slouch_buffer
 import slouch_decider
 
-INTERVAL_MS = 500
+INTERVAL_MS = 20
 CAL_LENGTH_MS = 4000
 
 # python3 main.py MOCK_MPU1 MOCK_MPU2 BLUETOOTH
@@ -54,11 +54,11 @@ def slouch_detection_reading(mpu1_reading, mpu2_reading):
     if decider.decide(mpu1_reading, mpu2_reading):
         add_to_buffer(ActivityType.SLOUCH_ALERT)
         score = slouch_buffer.update_buffer(True)
-        if score == 0 or score:
+        if score:
             add_to_buffer(ActivityType.POSTURE, value=score)
     else:
         score = slouch_buffer.update_buffer(False)
-        if score == 0 or score:
+        if score:
             add_to_buffer(ActivityType.POSTURE, value=score)
     # add_to_buffer(ActivityType.POSTURE, 55)
 
@@ -69,7 +69,6 @@ def sedentary_detection_reading(lower_mpu_reading):
 
 
 def received_new_mpu1_reading(reading, calibrate=False):
-    print(calibrate)
     print("# received_new_mpu1_reading", reading.timestamp, reading.x, reading.y, reading.z)
     if calibrate:
         mpu1_norm_readings.append(reading)
