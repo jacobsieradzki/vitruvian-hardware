@@ -5,6 +5,9 @@ from input import get_input_sources
 from ActivityType import ActivityType
 from grove.button import Button
 import grove.grove_ryb_led_button.GroveLedButton
+import os
+from mraa import getGpioLookup
+from upm import pyupm_buzzer as upmBuzzer
 
 # python3 main.py MOCK_MPU1 MOCK_MPU2 MOCK_GYRO BLUETOOTH
 # python3 main.py LIVE LIVE LIVE BLUETOOTH
@@ -24,22 +27,58 @@ mpu1_readings = []
 mpu2_readings = []
 gyro_readings = []
 led_button = GroveLedButton(5)
+led_button.led.light(False)
+normed = False
+buzzer = upmBuzzer.Buzzer(getGpioLookup("GPIO%02d" % 12))
 
+#handler for different button press events
 def cust_on_event(index, event, tm):
     #print "event with code {}, time {}".format(event, tm)
-    press.led.brightness = press.led.MAX_BRIGHT
-    if event & Button.EV_SINGLE_CLICK:
-        #press.led.light(True)
-        ### Insert action if single click of button occurs
-    elif event & Button.EV_DOUBLE_CLICK:
-        #press.led.blink()
-        ### Insert action if double click occurs (NB, least reliable based on testing)
-    elif event & Button.EV_LONG_PRESS:
-        #press.led.light(False)
-        ### Insert action if long press occurs (NB, most reliable based on testing)
+    led_button.led.brightness = press.led.MAX_BRIGHT
+    if (event & Button.EV_SINGLE_CLICK):
+        #when single click and already calibrated normals, calibrate over_threshold
+        if (normed):
+            ###call calibrate function here
+            normed = False
+            feedback(3)
+            feedback(4)
+            led_button.led.light(True)
+    elif (event & Button.EV_LONG_PRESS):
+        #when long press - calibrate the norms
+        ###call calibrate function here
+        normed = True
+        feedback(3)
+        feedback(4)
+        led_button.led.blink()
 
+
+#assign event handler to button object
 led_button.on_event = cust_on_event
 
+#function to play a corresponding note (and hopefully at a corresponding volume)
+#numbers 0-7 correspond to notes do-si. all currently also use anglebuzz, but can be changed
+def feedback(note_number, volume=500000):
+    if (note_number == 0):
+        buzzer.playSound(upmBuzzer.BUZZER_DO, volume)
+        os.system("python3 anglebuzz.py") #could add new buzz files? or do we still need this if main.py is in python 3?
+    elif (note_number == 1):
+        buzzer.playSound(upmBuzzer.BUZZER_RE, volume
+        os.system("python3 anglebuzz.py")
+    elif (note_number == 2):
+        buzzer.playSound(upmBuzzer.BUZZER_MI, volume)
+        os.system("python3 anglebuzz.py")
+    elif (note_number == 3):
+        buzzer.playSound(upmBuzzer.BUZZER_FA, volume)
+        os.system("python3 anglebuzz.py")
+    elif (note_number == 4):
+        buzzer.playSound(upmBuzzer.BUZZER_SOL, volume)
+        os.system("python3 anglebuzz.py")
+    elif (note_number == 5):
+        buzzer.playSound(upmBuzzer.BUZZER_LA, volume)
+        os.system("python3 anglebuzz.py")
+    elif (note_number == 6):
+        buzzer.playSound(upmBuzzer.BUZZER_SI, volume)
+        os.system("python3 anglebuzz.py")
 
 def add_to_buffer(activity_type, value=None):
     global buffer_file
