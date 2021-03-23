@@ -35,23 +35,17 @@ def add_to_buffer(activity_type, value=None):
     print(buffer_file)
 
 
+slouch_detection = ExampleDetectionAlgorithm(add_to_buffer)
+sedentary_detection = ExampleDetectionAlgorithm(add_to_buffer)
+
+
 def received_readings():
     if len(mpu1_readings) < 1 or len(mpu2_readings) < 1:
         return
 
     mpu1_reading, mpu2_reading = mpu1_readings.pop(0), mpu2_readings.pop(0)
-    slouch_detection_reading(mpu1_reading, mpu2_reading)
-    sedentary_detection_reading(mpu2_reading)
-
-
-def slouch_detection_reading(mpu1_reading, mpu2_reading):
-    print("### slouch_detection ...", mpu1_reading, mpu2_reading)
-    # add_to_buffer(ActivityType.POSTURE, 55)
-
-
-def sedentary_detection_reading(lower_mpu_reading):
-    print("### sedentary_detection_reading ...", lower_mpu_reading)
-    # add_to_buffer(ActivityType.WALKING)
+    slouch_detection.add_new_reading(mpu1_reading, mpu2_reading)
+    sedentary_detection.add_new_reading(mpu2_reading)
 
 
 def received_new_mpu1_reading(reading):
