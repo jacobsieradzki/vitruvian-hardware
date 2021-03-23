@@ -43,13 +43,13 @@ def received_readings():
         return
 
     print("here")
-    mpu1_reading, mpu2_reading, gyro_reading = mpu1_readings.pop(0), mpu2_readings.pop(0), gyro_readings.pop(0)
+    mpu1_reading, mpu2_reading = mpu1_readings.pop(0), mpu2_readings.pop(0)
     slouch_detection_reading(mpu1_reading, mpu2_reading)
     sedentary_detection_reading(mpu1_reading, mpu2_reading, gyro_reading)
 
 
 def slouch_detection_reading(mpu1_reading, mpu2_reading):
-    if slouch_decider.decide(mpu1_reading, mpu2_reading):
+    if decider.decide(mpu1_reading, mpu2_reading):
         print("### slouch_detection ...", mpu1_reading, mpu2_reading)
         add_to_buffer(ActivityType.SLOUCH_ALERT)
         score = slouch_buffer.update_buffer(True)
@@ -77,7 +77,7 @@ def received_new_mpu1_reading(reading, calibrate=False):
         received_readings()
 
 
-def received_new_mpu2_reading(reading, caibrate=False):
+def received_new_mpu2_reading(reading, calibrate=False):
     print("# received_new_mpu2_reading", reading.timestamp, reading.x, reading.y, reading.z)
     if(calibrate):
         mpu2_norm_readings.append(reading)

@@ -24,7 +24,7 @@ class slouch_decider:
     #Decides the users progress towards a slouch output, returning true if the user is slouching,
     #   returning false and updating the counter if not.
     def decide(reading1, reading2):
-        if slouching(reading1, reading2):
+        if self.slouching(reading1, reading2):
             self.counter += 0.25
         else:
             self.counter -= 1.25
