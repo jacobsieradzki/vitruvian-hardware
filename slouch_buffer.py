@@ -15,14 +15,14 @@ time_slouching = 0
 
 def update_buffer(slouching):
     global cur_slice
+    global time_slouching
     new_slice = sliced_time()
     if(new_slice != cur_slice):
         cur_slice = new_slice
         score = (SLICE_LENGTH - time_slouching) / float(SLICE_LENGTH) * 100
         return score
     if slouching:
-        global time_slouching
-        print str(time_slouching)
+        print(str(time_slouching))
         time_slouching = time_slouching + 4
         return False
     else:

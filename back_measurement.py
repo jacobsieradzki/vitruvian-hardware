@@ -33,16 +33,14 @@ def calculate_norm(readings):
         i += 1
     norm_angle = sum(angles)/len(angles)
     norm_curve = sum(curves)/len(curves)
-    print "Normal angle set to: " + str(norm_angle)
-    print "Normal curve set to: " + str(norm_curve)
-    print "\n"
+    print("Normal angle set to: " + str(norm_angle))
+    print("Normal curve set to: " + str(norm_curve))
+    print("\n")
     return (norm_angle, norm_curve)
 
 #Given normal values for angle and curve, as well as measurements for angle and curve, return 
 # absolute differneces between the measured and normal values
-def calculate_differences(norm, measurements):
-    (norm_angle, norm_curve) = norm
-    (angle, curve) = measurements
+def calculate_differences(norm_angle, norm_curve, angle, curve):
     angle_diff = abs(angle - norm_angle)
     curve_diff = abs(curve - norm_curve)
     return (angle_diff, curve_diff)
