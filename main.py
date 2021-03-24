@@ -41,7 +41,7 @@ def cust_on_event(index, event, tm):
 
 led_button.on_event = cust_on_event
 
-sed_alg = Algorithm(20, 10, add_to_buffer)
+sed_alg = Algorithm(60, 1, add_to_buffer)
 
 def add_to_buffer(activity_type, value=None):
     global buffer_file
