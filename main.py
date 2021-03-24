@@ -8,6 +8,7 @@ import slouch_buffer
 import slouch_decider
 
 INTERVAL_MS = 20
+SLICE_LENGTH_MS = 20000
 CAL_LENGTH_MS = 4000
 
 # python3 main.py MOCK_MPU1 MOCK_MPU2 BLUETOOTH
@@ -25,7 +26,7 @@ mpu2_readings = []
 mpu1_norm_readings = []
 mpu2_norm_readings = []
 
-decider = slouch_decider.slouch_decider(0, 0)
+sbuffer = slouch_buffer.slouch_buffer(SLICE_LENGTH_MS)
 
 
 def add_to_buffer(activity_type, value=None):
@@ -53,11 +54,11 @@ def slouch_detection_reading(mpu1_reading, mpu2_reading):
     print("### slouch_detection ...", mpu1_reading, mpu2_reading)
     if decider.decide(mpu1_reading, mpu2_reading):
         add_to_buffer(ActivityType.SLOUCH_ALERT)
-        score = slouch_buffer.update_buffer(True)
+        score = sbuffer.update_buffer(True)
         if score:
             add_to_buffer(ActivityType.POSTURE, value=score)
     else:
-        score = slouch_buffer.update_buffer(False)
+        score = sbuffer.update_buffer(False)
         if score:
             add_to_buffer(ActivityType.POSTURE, value=score)
     # add_to_buffer(ActivityType.POSTURE, 55)
