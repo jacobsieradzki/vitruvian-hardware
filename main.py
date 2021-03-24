@@ -5,6 +5,7 @@ from input import get_input_sources
 from ActivityType import ActivityType
 from grove.button import Button
 import grove.grove_ryb_led_button.GroveLedButton
+from sedentary_detection_alg import Algorithm
 
 # python3 main.py MOCK_MPU1 MOCK_MPU2 MOCK_GYRO BLUETOOTH
 # python3 main.py LIVE LIVE LIVE BLUETOOTH
@@ -40,6 +41,7 @@ def cust_on_event(index, event, tm):
 
 led_button.on_event = cust_on_event
 
+sed_alg = Algorithm(20, 10, add_to_buffer)
 
 def add_to_buffer(activity_type, value=None):
     global buffer_file
@@ -68,6 +70,7 @@ def slouch_detection_reading(mpu1_reading, mpu2_reading):
 
 def sedentary_detection_reading(lower_mpu_reading, gyro_reading):
     print("### sedentary_detection_reading ...", lower_mpu_reading, gyro_reading)
+    sed_alg.collect_readings(lower_mpu_reading)
     # add_to_buffer(ActivityType.WALKING)
 
 

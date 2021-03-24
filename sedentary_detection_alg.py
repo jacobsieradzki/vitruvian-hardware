@@ -13,6 +13,7 @@ class Algorithm:
         self.active_count = 0
         self.active_count_limit = self.active_dur*60/self.segmet_size
         self.add_to_buffer = add_to_buffer
+        self.last_pred = -1
 
         #load model
         self.model = LiteModel('./ml_models/model.tflite')
@@ -37,7 +38,11 @@ class Algorithm:
         data = self.norm.norm_x(df)
 
         y_pred = self.model.predict(x)
-
+        
+        if y_pred != self.last_pred:
+            self.add_to_buffer(y_pred + 3)
+            self.last_pred = y_pred
+            
         if (y_pred == 3 or y_pred == 4 or y_pred == 5):
             self.sed_count += 1
             if(self.sed_count >= self.sed_count_limit):
@@ -49,5 +54,7 @@ class Algorithm:
             if(self.active_count >= self.active_count_limit):
                 self.sed_count = 0
                 self.active_count = 0
+    
+        
 
 
