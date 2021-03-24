@@ -50,6 +50,11 @@ class Normaliser:
         data = self.scaler.transform(data)
         return pd.DataFrame(data=data, columns = ['x', 'y', 'z']), labels
 
+    def norm_x(self, data):
+        data = data[['x', 'y', 'z']]
+        data = self.scaler.transform(data)
+        return pd.DataFrame(data=data, columns = ['x', 'y', 'z'])
+
 class Model:
     def __init__(self, model_path):
         self.model = tf.keras.models.load_model(model_path)
