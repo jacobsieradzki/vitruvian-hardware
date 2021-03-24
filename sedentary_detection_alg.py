@@ -1,8 +1,9 @@
 import pandas as pd
 from ml_kit import *
+from ActivityType import ActivityType
 
 class Algorithm:
-    def __init__(self, duration, active_duration):
+    def __init__(self, duration, active_duration, add_to_buffer):
         self.readings = []
         self.segmet_size = 4 #seconds default
         self.dur = duration #duration in minutes
@@ -11,6 +12,7 @@ class Algorithm:
         self.sed_count_limit = self.dur*60/self.segmet_size
         self.active_count = 0
         self.active_count_limit = self.active_dur*60/self.segmet_size
+        self.add_to_buffer = add_to_buffer
 
         #load model
         self.model = LiteModel('./ml_models/model.tflite')
@@ -39,8 +41,7 @@ class Algorithm:
         if (y_pred == 3 or y_pred == 4 or y_pred == 5):
             self.sed_count += 1
             if(self.sed_count >= self.sed_count_limit):
-                #call send notification function here
-                print(f'notification sent for being sedentary for {self.dur} minutes')
+                self.add_to_buffer(ActivityType.SIT_ALERT)
                 self.sed_count = 0
 
         else:
