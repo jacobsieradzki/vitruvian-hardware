@@ -26,6 +26,7 @@ mpu2_readings = []
 mpu1_norm_readings = []
 mpu2_norm_readings = []
 
+decider = slouch_decider.slouch_decider(0, 0, INTERVAL_MS)
 sbuffer = slouch_buffer.slouch_buffer(SLICE_LENGTH_MS)
 
 
