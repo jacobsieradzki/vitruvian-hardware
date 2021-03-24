@@ -1,5 +1,6 @@
 # from AccelerometerInputSource import MPUInputSource
 from MockInputSource import MockInputSource
+from LiveInputSource import LiveInputSource
 
 
 def get_input_sources(mpu1_source, mpu2_source, received_new_mpu1_reading, received_new_mpu2_reading):

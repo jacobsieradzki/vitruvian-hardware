@@ -38,8 +38,7 @@ def add_to_buffer(activity_type, value=None):
     else:
         item += str(activity_type) + " " + str(rel_time) + " " + str(value)
     buffer_file += item
-    print("### file")
-    print(buffer_file)
+    print("### file", buffer_file)
 
 
 def received_readings():
@@ -118,6 +117,7 @@ def calibrate_threshold():
     decider.curve_threshold = norm[1] - decider.norm_curve
     mpu1_norm_readings.clear()
     mpu2_norm_readings.clear()
+
 
 while True:
     mpu1_source.fetch_new_reading(rel_time, INTERVAL_MS)
