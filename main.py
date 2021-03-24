@@ -105,6 +105,20 @@ def calibrate():
     mpu1_norm_readings.clear()
     mpu2_norm_readings.clear()
 
+def calibrate_threshold():
+    i = 0
+    while i < CAL_LENGTH_MS:
+        mpu1_source.fetch_new_reading(rel_time, INTERVAL_MS, calibrate=True)
+        mpu2_source.fetch_new_reading(rel_time, INTERVAL_MS, calibrate=True)
+
+        time.sleep(INTERVAL_MS / 1000)
+    readings = zip(mpu1_norm_readings, mpu2_norm_readings)
+    norm = calculate_norm()
+    decider.angle_threshold = norm[0] - decider.norm_angle
+    decider.curve_threshold = norm[1] - decider.norm_curve
+    mpu1_norm_readings.clear()
+    mpu2_norm_readings.clear()
+
 while True:
     mpu1_source.fetch_new_reading(rel_time, INTERVAL_MS)
     mpu2_source.fetch_new_reading(rel_time, INTERVAL_MS)
