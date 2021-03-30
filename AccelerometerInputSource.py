@@ -16,7 +16,7 @@ class MPUInputSource:
     def fetch_new_reading(self, timestamp, calibrate=False):
         bus.write_byte(address, self.path)
         acceleration = mpu.readAccel()
-        x = acceleration['y'] + 0.00000001
+        x = acceleration['x'] + 0.00000001
         y = acceleration['y'] + 0.00000001
         z = acceleration['z'] + 0.00000001
         self.received_new_reading(Reading(timestamp, x, y, z), calibrate=calibrate)
