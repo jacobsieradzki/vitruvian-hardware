@@ -6,6 +6,11 @@ from ActivityType import ActivityType
 from back_measurement import calculate_norm
 import slouch_buffer
 import slouch_decider
+from grove.button import Button
+import grove.grove_ryb_led_button.GroveLedButton
+import os
+from mraa import getGpioLookup
+from upm import pyupm_buzzer as upmBuzzer
 
 INTERVAL_MS = 20
 SLICE_LENGTH_MS = 20000
@@ -29,6 +34,63 @@ mpu2_norm_readings = []
 decider = slouch_decider.slouch_decider(0, 0, INTERVAL_MS)
 sbuffer = slouch_buffer.slouch_buffer(SLICE_LENGTH_MS)
 
+led_button = GroveLedButton(5)
+led_button.led.light(False)
+normed = False
+enabled = False
+buzzer = upmBuzzer.Buzzer(getGpioLookup("GPIO%02d" % 12))
+
+#handler for different button press events
+def cust_on_event(index, event, tm):
+    #print "event with code {}, time {}".format(event, tm)
+    led_button.led.brightness = press.led.MAX_BRIGHT
+    if (event & Button.EV_SINGLE_CLICK):
+        #when single click and already calibrated normals, calibrate over_threshold
+        if (normed):
+            feedback(5)
+            calibrate_threshold()
+            normed = False
+            feedback(3)
+            led_button.led.light(True)
+            enabled = True
+    elif (event & Button.EV_LONG_PRESS):
+        #when long press - calibrate the norms
+        enabled = False
+        feedback(5)
+        calibrate()
+        normed = True
+        feedback(3)
+        led_button.led.blink()
+
+
+#assign event handler to button object
+led_button.on_event = cust_on_event
+
+#function to play a corresponding note (and hopefully at a corresponding volume)
+#numbers 0-7 correspond to notes do-si. all currently also use anglebuzz, but can be changed
+def feedback(note_number, volume=500000):
+    if (note_number == 0):
+        buzzer.playSound(upmBuzzer.BUZZER_DO, volume)
+        os.system("python3 anglebuzz.py") #could add new buzz files? or do we still need this if main.py is in python 3?
+    elif (note_number == 1):
+        buzzer.playSound(upmBuzzer.BUZZER_RE, volume
+        os.system("python3 anglebuzz.py")
+    elif (note_number == 2):
+        buzzer.playSound(upmBuzzer.BUZZER_MI, volume)
+        os.system("python3 anglebuzz.py")
+    elif (note_number == 3):
+        buzzer.playSound(upmBuzzer.BUZZER_FA, volume)
+        os.system("python3 anglebuzz.py")
+    elif (note_number == 4):
+        buzzer.playSound(upmBuzzer.BUZZER_SOL, volume)
+        os.system("python3 anglebuzz.py")
+    elif (note_number == 5):
+        buzzer.playSound(upmBuzzer.BUZZER_LA, volume)
+        os.system("python3 anglebuzz.py")
+    elif (note_number == 6):
+        buzzer.playSound(upmBuzzer.BUZZER_SI, volume)
+        os.system("python3 anglebuzz.py")
+
 
 def add_to_buffer(activity_type, value=None):
     global buffer_file
@@ -47,12 +109,13 @@ def received_readings():
 
     mpu1_reading, mpu2_reading = mpu1_readings.pop(0), mpu2_readings.pop(0)
     slouch_detection_reading(mpu1_reading, mpu2_reading)
-    sedentary_detection_reading(mpu2_reading)
+    #sedentary_detection_reading(mpu2_reading)
 
 
 def slouch_detection_reading(mpu1_reading, mpu2_reading):
     print("### slouch_detection ...", mpu1_reading, mpu2_reading)
     if decider.decide(mpu1_reading, mpu2_reading):
+        feedback(4)
         add_to_buffer(ActivityType.SLOUCH_ALERT)
         score = sbuffer.update_buffer(True)
         if score:
@@ -64,8 +127,8 @@ def slouch_detection_reading(mpu1_reading, mpu2_reading):
     # add_to_buffer(ActivityType.POSTURE, 55)
 
 
-def sedentary_detection_reading(lower_mpu_reading):
-    print("### sedentary_detection_reading ...", lower_mpu_reading)
+#def sedentary_detection_reading(lower_mpu_reading):
+    #print("### sedentary_detection_reading ...", lower_mpu_reading)
     # add_to_buffer(ActivityType.WALKING)
 
 
@@ -120,8 +183,9 @@ def calibrate_threshold():
 
 
 while True:
-    mpu1_source.fetch_new_reading(rel_time, INTERVAL_MS)
-    mpu2_source.fetch_new_reading(rel_time, INTERVAL_MS)
+    if (enabled) :
+        mpu1_source.fetch_new_reading(rel_time, INTERVAL_MS)
+        mpu2_source.fetch_new_reading(rel_time, INTERVAL_MS)
 
     rel_time += INTERVAL_MS
     time.sleep(INTERVAL_MS / 1000)
