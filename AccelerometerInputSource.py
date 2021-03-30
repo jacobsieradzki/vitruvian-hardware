@@ -8,7 +8,7 @@ mpu = MPU.MPU9250()
 
 
 class MPUInputSource:
-    def __init__(self, path, received_new_reading, recieved_new_norm_reading):
+    def __init__(self, path, received_new_reading): #, recieved_new_norm_reading):
         self.path = path
         self.received_new_reading = received_new_reading
         bus.write_byte(address, self.path)

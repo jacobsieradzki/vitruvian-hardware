@@ -7,7 +7,7 @@ from back_measurement import calculate_norm
 import slouch_buffer
 import slouch_decider
 from grove.button import Button
-import grove.grove_ryb_led_button.GroveLedButton
+import led_button as led
 import os
 from mraa import getGpioLookup
 from upm import pyupm_buzzer as upmBuzzer
@@ -34,7 +34,7 @@ mpu2_norm_readings = []
 decider = slouch_decider.slouch_decider(0, 0, INTERVAL_MS)
 sbuffer = slouch_buffer.slouch_buffer(SLICE_LENGTH_MS)
 
-led_button = GroveLedButton(5)
+led_button = led.GroveLedButton(5)
 led_button.led.light(False)
 normed = False
 enabled = False
@@ -49,7 +49,7 @@ def cust_on_event(index, event, tm):
         if (normed):
             feedback(5)
             calibrate_threshold()
-            normed = False
+	    normed = False
             feedback(3)
             led_button.led.light(True)
             enabled = True
@@ -73,7 +73,7 @@ def feedback(note_number, volume=500000):
         buzzer.playSound(upmBuzzer.BUZZER_DO, volume)
         os.system("python3 anglebuzz.py") #could add new buzz files? or do we still need this if main.py is in python 3?
     elif (note_number == 1):
-        buzzer.playSound(upmBuzzer.BUZZER_RE, volume
+        buzzer.playSound(upmBuzzer.BUZZER_RE, volume)
         os.system("python3 anglebuzz.py")
     elif (note_number == 2):
         buzzer.playSound(upmBuzzer.BUZZER_MI, volume)
